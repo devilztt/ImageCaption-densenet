@@ -26,16 +26,16 @@ from im2txt import show_and_tell_model
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.flags.DEFINE_string("input_file_pattern", "/home/ztt/im2txt_densenet/im2txt/dataset/train-?????-of-00016",
+tf.flags.DEFINE_string("input_file_pattern", "/data/devilztt/image-caption/train-?????-of-00016",
                        "File pattern of sharded TFRecord input files.")
-tf.flags.DEFINE_string("inception_checkpoint_file", "/home/ztt/im2txt_densenet/im2txt/pretrained/tf-densenet161.ckpt",
+tf.flags.DEFINE_string("inception_checkpoint_file", "/data/devilztt/image-caption/tf-densenet161.ckpt",
                        "Path to a pretrained inception_v3 model.")
-tf.flags.DEFINE_string("train_dir", "./output",
+tf.flags.DEFINE_string("train_dir", "/output",
                        "Directory for saving and loading model checkpoints.")
 tf.flags.DEFINE_boolean("train_inception", True,
                         "Whether to train inception submodel variables.")
 tf.flags.DEFINE_integer("number_of_steps", 1000000, "Number of training steps.")
-tf.flags.DEFINE_integer("log_every_n_steps", 1,
+tf.flags.DEFINE_integer("log_every_n_steps", 20,
                         "Frequency at which loss and global step are logged.")
 
 tf.logging.set_verbosity(tf.logging.INFO)

@@ -56,12 +56,12 @@ class ModelConfig(object):
     self.num_preprocess_threads = 4
 
     # Batch size.
-    self.batch_size = 4
+    self.batch_size = 128
 
     # File containing an Inception v3 checkpoint to initialize the variables
     # of the Inception model. Must be provided when starting training for the
     # first time.
-    self.inception_checkpoint_file = '/home/ztt/im2txt_densenet/im2txt/pretrained/tf-densenet161.ckpt'
+    self.inception_checkpoint_file = '/data/devilztt/image-caption/tf-densenet161.ckpt'
 
     # Dimensions of Inception v3 input images.
     self.image_height = 224
@@ -87,7 +87,7 @@ class TrainingConfig(object):
     self.num_examples_per_epoch = 586363
 
     # Optimizer for training the model.
-    self.optimizer = "SGD"
+    self.optimizer = "Adam"
 
     # Learning rate for the initial phase of training.
     self.initial_learning_rate = 2.0
