@@ -26,16 +26,20 @@ from im2txt import show_and_tell_model
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.flags.DEFINE_string("input_file_pattern", "/data/devilztt/image-caption/train-?????-of-00016",
+tf.flags.DEFINE_string("input_file_pattern", "/data/devilztt/im2txt-flick8k/train-?????-of-00008",
                        "File pattern of sharded TFRecord input files.")
-tf.flags.DEFINE_string("inception_checkpoint_file", "/data/devilztt/image-caption/tf-densenet161.ckpt",
+tf.flags.DEFINE_string("inception_checkpoint_file", "/data/devilztt/im2txt-flick8k/tf-densenet161.ckpt",
                        "Path to a pretrained inception_v3 model.")
 tf.flags.DEFINE_string("train_dir", "/output",
                        "Directory for saving and loading model checkpoints.")
-tf.flags.DEFINE_boolean("train_inception", True,
+tf.flags.DEFINE_boolean("train_inception", False,
                         "Whether to train inception submodel variables.")
-tf.flags.DEFINE_integer("number_of_steps", 1000000, "Number of training steps.")
-tf.flags.DEFINE_integer("log_every_n_steps", 20,
+tf.flags.DEFINE_integer("number_of_steps", 3750, "Number of training steps.")
+
+tf.flags.DEFINE_float("learning_rate", 0.005, "learning_rate.")
+
+
+tf.flags.DEFINE_integer("log_every_n_steps", 30,
                         "Frequency at which loss and global step are logged.")
 
 tf.logging.set_verbosity(tf.logging.INFO)
@@ -69,7 +73,7 @@ def main(unused_argv):
     if FLAGS.train_inception:
       learning_rate = tf.constant(training_config.train_inception_learning_rate)
     else:
-      learning_rate = tf.constant(training_config.initial_learning_rate)
+      learning_rate = tf.constant(FLAGS.learning_rate)
       if training_config.learning_rate_decay_factor > 0:
         num_batches_per_epoch = (training_config.num_examples_per_epoch /
                                  model_config.batch_size)
@@ -86,6 +90,8 @@ def main(unused_argv):
 
         learning_rate_decay_fn = _learning_rate_decay_fn
 
+    print('=====================',tf.trainable_variables())    
+    #print('-----------learning_rate',learning_rate)
     # Set up the training ops.
     train_op = tf.contrib.layers.optimize_loss(
         loss=model.total_loss,
@@ -95,6 +101,8 @@ def main(unused_argv):
         clip_gradients=training_config.clip_gradients,
         learning_rate_decay_fn=learning_rate_decay_fn)
 
+    tf.summary.scalar("learning_rate",learning_rate)
+    #print('----------learning_rate----->>>>',learning_rate)
     # Set up the Saver for saving and restoring model checkpoints.
     saver = tf.train.Saver(max_to_keep=training_config.max_checkpoints_to_keep)
 

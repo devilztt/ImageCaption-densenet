@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-r"""Generate captions for images using default beam search parameters."""
+"""Generate captions for images using default beam search parameters."""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -31,12 +31,12 @@ from im2txt.inference_utils import vocabulary
 
 FLAGS = tf.flags.FLAGS
 
-tf.flags.DEFINE_string("checkpoint_path", "/home/ztt/im2txt_densenet/output",
+tf.flags.DEFINE_string("checkpoint_path", "/output",
                        "Model checkpoint file or directory containing a "
                        "model checkpoint file.")
-tf.flags.DEFINE_string("vocab_file", "/home/ztt/im2txt_densenet/im2txt/dataset/word_counts.txt", "Text file containing the vocabulary.")
+tf.flags.DEFINE_string("vocab_file", "/data/devilztt/im2txt-flick8k/word_counts.txt", "Text file containing the vocabulary.")
 
-tf.flags.DEFINE_string("input_files", "/home/ztt/im2txt_densenet/im2txt/dataset/667626_18933d713e.jpg",
+tf.flags.DEFINE_string("input_files", "23445819_3a458716c1.jpg,17273391_55cfc7d3d4.jpg,27782020_4dab210360.jpg,35506150_cbdb630f4f.jpg,11.jpg",
                        "File pattern or comma-separated list of file patterns "
                        "of image files.")
 
@@ -71,8 +71,10 @@ def main(_):
     generator = caption_generator.CaptionGenerator(model, vocab)
 
     for filename in filenames:
+      #with open(filename,'rb') as f:
       with tf.gfile.GFile(filename, "rb") as f:
         image = f.read()
+        print(type(image))
       captions = generator.beam_search(sess, image)
       print("Captions for image %s:" % os.path.basename(filename))
       for i, caption in enumerate(captions):

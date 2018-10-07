@@ -116,7 +116,7 @@ def inception_v3(images,
 
 def densenet_161(images,
                  trainable=True,
-                 is_training=True,
+                 is_training=False,
                  weight_decay=0.00004,
                  stddev=0.1,
                  dropout_keep_prob=0.8,
@@ -145,17 +145,20 @@ def densenet_161(images,
   # Only consider the inception model to be in training mode if it's trainable.
   is_densenet_model_training = trainable and is_training
 
-  with slim.arg_scope(densenet.densenet_arg_scope()):
-    net, end_points = densenet.densenet161(images,is_training=is_training,)#(inputs, num_classes=1000, data_format='NHWC', is_training=True, reuse=None):
-    with tf.variable_scope("logits2"):
-      shape = net.get_shape()
-      net = slim.avg_pool2d(net, shape[1:3], padding="VALID", scope="pool")
-      net = slim.dropout(
-          net,
-          keep_prob=dropout_keep_prob,
-          is_training=is_densenet_model_training,
-          scope="dropout")
-      net = slim.flatten(net, scope="flatten")
+  with slim.arg_scope(
+      [slim.conv2d, slim.batch_norm],
+      trainable=trainable):
+    with slim.arg_scope(densenet.densenet_arg_scope()):
+      net, end_points = densenet.densenet161(images,is_training=is_densenet_model_training,)#(inputs, num_classes=1000, data_format='NHWC', is_training=True, reuse=None):
+      with tf.variable_scope("logits2"):
+        shape = net.get_shape()
+        net = slim.avg_pool2d(net, shape[1:3], padding="VALID", scope="pool")
+        net = slim.dropout(
+            net,
+            keep_prob=dropout_keep_prob,
+            is_training=is_densenet_model_training,
+            scope="dropout")
+        net = slim.flatten(net, scope="flatten")
 
   # Add summaries.
   if add_summaries:

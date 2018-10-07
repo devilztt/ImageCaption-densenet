@@ -29,7 +29,7 @@ import tensorflow as tf
 from im2txt.ops import image_embedding
 from im2txt.ops import image_processing
 from im2txt.ops import inputs as input_ops
-
+import pickle
 
 class ShowAndTellModel(object):
   """Image-to-text implementation based on http://arxiv.org/abs/1411.4555.
@@ -95,6 +95,8 @@ class ShowAndTellModel(object):
 
     # Global step Tensor.
     self.global_step = None
+
+    self.embedding_map=pickle.load(open(config.embedding_file,'rb'))
 
   def is_training(self):
     """Returns true if the model is built for training mode."""
@@ -226,12 +228,14 @@ class ShowAndTellModel(object):
     Outputs:
       self.seq_embeddings
     """
-    with tf.variable_scope("seq_embedding"), tf.device("/cpu:0"):
-      embedding_map = tf.get_variable(
-          name="map",
-          shape=[self.config.vocab_size, self.config.embedding_size],
-          initializer=self.initializer)
-      seq_embeddings = tf.nn.embedding_lookup(embedding_map, self.input_seqs)
+    # with tf.variable_scope("seq_embedding"), tf.device("/cpu:0"):
+    #   embedding_map = tf.get_variable(
+    #       name="map",
+    #       shape=[self.config.vocab_size, self.config.embedding_size],
+    #       initializer=self.initializer)
+    #   seq_embeddings = tf.nn.embedding_lookup(embedding_map, self.input_seqs)
+    embedding_map=self.embedding_map
+    seq_embeddings = tf.nn.embedding_lookup(embedding_map, self.input_seqs)
 
     self.seq_embeddings = seq_embeddings
 
