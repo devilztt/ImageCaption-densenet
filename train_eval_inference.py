@@ -6,7 +6,7 @@ import argparse
 def parse_args(check=True):
     parser = argparse.ArgumentParser()
     parser.add_argument('--learning_rate', type=float, default=0.005)
-    parser.add_argument('--number_of_steps', type=int, default=2200)
+    parser.add_argument('--number_of_steps', type=int, default=0)
 
     FLAGS, unparsed = parser.parse_known_args()
     return FLAGS, unparsed
@@ -25,8 +25,9 @@ if __name__ == '__main__':
     number_of_steps=FLAGS.number_of_steps
     k=3750
     print(os.getcwd())
-    for i in range(40):
-        number_of_steps+=2200
+    for val in range(10):
+
+        number_of_steps+=50000
        # train 1 epoch
         print('################    train    ################')
         print(os.getcwd)
@@ -41,7 +42,6 @@ if __name__ == '__main__':
         print('################    inference    ################')
         os.system('python3 ./run_inference.py')
 
-        learning_rate=learning_rate*0.9
 
         
 
