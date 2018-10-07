@@ -25,9 +25,9 @@ if __name__ == '__main__':
     number_of_steps=FLAGS.number_of_steps
     k=3750
     print(os.getcwd())
-    for val in range(10):
+    for val in range(50):
 
-        number_of_steps+=50000
+        number_of_steps+=10000
        # train 1 epoch
         print('################    train    ################')
         print(os.getcwd)
