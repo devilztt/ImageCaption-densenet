@@ -27,7 +27,7 @@ if __name__ == '__main__':
     print(os.getcwd())
     for val in range(50):
 
-        number_of_steps+=10000
+        number_of_steps+=5000
        # train 1 epoch
         print('################    train    ################')
         print(os.getcwd)
