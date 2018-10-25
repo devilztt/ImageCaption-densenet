@@ -42,6 +42,10 @@ if __name__ == '__main__':
         print('################    inference    ################')
         os.system('python3 ./run_inference.py')
 
+        # frozen
+        print('################    frozen    ################')
+        os.system('python3 ./frozen.py')
+
 
         
 
